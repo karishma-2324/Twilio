@@ -1,0 +1,44 @@
+import requests
+from twilio.rest import Client
+
+
+account_sid = "  "
+auth_token = "   "
+
+client = Client(account_sid, auth_token)
+
+
+students = ['whatsapp:+']
+
+
+url = "https://remoteok.com/api"
+
+
+response = requests.get(url)
+jobs = response.json()
+
+
+for job in jobs:
+    if isinstance(job, dict):
+        title = job.get("position", "")
+
+        
+        if "java" in title.lower() or "python" in title.lower() or "engineer" in title.lower():
+
+            message = f"""🚀 Python Job Alert!
+
+🏢 Company: {job.get("company", "N/A")}
+💼 Role: {title}
+🔗 Link: {job.get("url", "N/A")}
+"""
+
+            
+            for student in students:
+                client.messages.create(
+                    from_='whatsapp:+',  
+                    body=message,
+                    to=student
+                )
+
+            print("✅ Message sent successfully!")
+            break  
